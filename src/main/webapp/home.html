@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <title>Project Information Form</title> 
+  <style>
+        .form-container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th {
+            color: red;
+	    	padding-left:20px;
+        }
+	td{
+		padding-right:20px;
+	}
+	#submit-button{
+		background-color: blue;
+		color: white;
+	}
+      
+    </style> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+ </head> 
+ <body> 
+  <div class="form-container"> 
+   <h2>Project Information Form</h2> 
+   <form id="myForm">
+    <table> 
+     <tbody>
+      <tr> 
+       <th>Project Name</th> 
+       <td><input type="text" id="project_name" name="projectName" style="width:300px;"></td> 
+       <th>Package Name</th> 
+       <td> <select id="package_name" name="packageName"> <option value="abc">ABC</option> <option value="xyz">XYZ</option> </select> </td> 
+      </tr> 
+      <tr> 
+       <th>Group ID</th> 
+       <td><input type="text" id="group_id" name="groupId" style="width:300px;"></td> 
+       <th>Amol Util</th> 
+       <td> <select id="amol_util" name="amolUtil"> <option value="abc">ABC</option> <option value="xyz">XYZ</option> </select> </td> 
+      </tr> 
+      <tr> 
+       <th>Artifact ID</th> 
+       <td><input type="text" id="artifact_id" name="artifactId" style="width:300px;"></td> 
+      </tr> 
+      <tr> 
+       <th>Service Type</th> 
+       <td colspan="2"> 
+		   <label><input type="radio" name="serviceType" value="domain"> Domain</label> 
+		   <label><input type="radio" name="serviceType" value="process"> Process</label> 
+		   <label><input type="radio" name="serviceType" value="system"> System</label> 
+	   </td> 
+      </tr> 
+      <tr> 
+       <th>Model Mapping</th> 
+       <td> <input type="file" name="file_upload" id="file_upload"></td> 
+       <td> <input type="button" value="Upload File"> </td> 
+      </tr> 
+     </tbody>
+    </table> 
+    <br><br><input type="submit"  id="submit-button" value="Submit Form" style="margin-left:45%"> 
+   </form> 
+  </div> 
+ 
+
+	<script>
+	
+/*$(document).ready(function() {
+				$("#myForm").submit(function(event) {
+					// Prevent default form submission
+					event.preventDefault();
+
+					// Get form data
+					var formData = $(this).serialize();
+					
+					// Call the REST API
+					callApi(formData);
+				});
+			});*/
+		/*function onSubmitForm(){
+		onclick="onSubmitForm()"
+			alert();
+			var formData= new FormData();
+			var formDataArray=[];
+			$("#myForm").each(function(index, form){
+				formData=$(this).serializeArray();
+				var formobject={};
+				$.each(formData, function(i,field){
+					formobject[field.name]=field.value;
+				});
+				formDataArray.push(formobject);
+			});
+			var jsonobject = formDataArray[0];
+			callApi(jsonobject);
+		};
+
+		function callApi(jsonobject) {
+			// Make an asynchronous request to your API endpoint
+			$.ajax({
+				url: "v1/submit",
+				method: 'POST',
+				data: JSON.stringify(jsonobject),
+				contentType: "application/json",
+				success: function(response) {
+					console.log(response);
+					alert("Form submitted successfully!");
+					//window.location.href = "success.html";
+				},
+				error: function(xhr, status, error) {
+					// Handle errors
+					console.error('There was a problem with the AJAX request:', error);
+				}
+			});
+		};*/
+		
+		
+		$(document).ready(function() {
+    $("#myForm").submit(function(event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+        // Add other form fields
+        formData.append("projectName", $("#project_name").val());
+        formData.append("packageName", $("#package_name").val());
+        formData.append("groupId", $("#group_id").val());
+        formData.append("artifactId", $("#artifact_id").val());
+        formData.append("serviceType", $('input[name="service_type"]:checked').val());
+		
+		// Get the file input element
+        var fileInput = $("#file_upload")[0].files[0];
+        // Append the file to FormData
+        formData.append("file", fileInput);
+
+        $.ajax({
+            url: "v1/submit",
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log(response);
+                alert("success response");
+            },
+            error: function(xhr, status, error) {
+                console.error('There was a problem with the AJAX request:', error);
+            }
+        });
+    });
+});
+
+	</script>
+</body>
+
+</html>
